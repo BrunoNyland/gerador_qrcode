@@ -1,0 +1,671 @@
+<!-- Three.js Canvas de Fundo -->
+<div class="canvas-container" aria-hidden="true">
+  <canvas #bgCanvas></canvas>
+</div>
+
+<div class="app-container">
+  <!-- Header -->
+  <header class="main-header">
+    <div class="logo-container">
+      <i class="fa-solid fa-qrcode logo-icon" aria-hidden="true"></i>
+      <h1 class="logo-text">QR-Gen</h1>
+    </div>
+    <div class="header-actions">
+      <!-- Seletor de Cores Accent -->
+      <div class="accent-selector" role="group" aria-label="Seletor de cor de destaque">
+        <span class="accent-dot" style="background-color: #4f46e5;" [class.active]="accentColor() === '#4f46e5'"
+          (click)="changeAccentColor('#4f46e5')" (keydown.enter)="changeAccentColor('#4f46e5')" (keydown.space)="changeAccentColor('#4f46e5'); $event.preventDefault()" tabindex="0" role="button" title="Índigo" aria-label="Cor de destaque Índigo"></span>
+        <span class="accent-dot" style="background-color: #ff5a00;" [class.active]="accentColor() === '#ff5a00'"
+          (click)="changeAccentColor('#ff5a00')" (keydown.enter)="changeAccentColor('#ff5a00')" (keydown.space)="changeAccentColor('#ff5a00'); $event.preventDefault()" tabindex="0" role="button" title="Laranja Brutalista" aria-label="Cor de destaque Laranja Brutalista"></span>
+        <span class="accent-dot" style="background-color: #10b981;" [class.active]="accentColor() === '#10b981'"
+          (click)="changeAccentColor('#10b981')" (keydown.enter)="changeAccentColor('#10b981')" (keydown.space)="changeAccentColor('#10b981'); $event.preventDefault()" tabindex="0" role="button" title="Verde Esmeralda" aria-label="Cor de destaque Verde Esmeralda"></span>
+        <span class="accent-dot" style="background-color: #8b5cf6;" [class.active]="accentColor() === '#8b5cf6'"
+          (click)="changeAccentColor('#8b5cf6')" (keydown.enter)="changeAccentColor('#8b5cf6')" (keydown.space)="changeAccentColor('#8b5cf6'); $event.preventDefault()" tabindex="0" role="button" title="Roxo Vibrante" aria-label="Cor de destaque Roxo Vibrante"></span>
+        <span class="accent-dot" style="background-color: #e11d48;" [class.active]="accentColor() === '#e11d48'"
+          (click)="changeAccentColor('#e11d48')" (keydown.enter)="changeAccentColor('#e11d48')" (keydown.space)="changeAccentColor('#e11d48'); $event.preventDefault()" tabindex="0" role="button" title="Rosa Vibrante" aria-label="Cor de destaque Rosa Vibrante"></span>
+        <input type="color" id="accentColorPicker" class="accent-color-picker" [ngModel]="accentColor()"
+          (ngModelChange)="changeAccentColor($event)" title="Cor Personalizada" aria-label="Escolher cor personalizada">
+      </div>
+
+      <!-- Alternador de Tema -->
+      <button class="theme-toggle-btn" (click)="toggleTheme()" title="Alternar tema claro/escuro" aria-label="Alternar tema claro/escuro">
+        <i class="fa-solid" [class.fa-sun]="!isDarkMode()" [class.fa-moon]="isDarkMode()" aria-hidden="true"></i>
+      </button>
+
+      <!-- Botão de Resetar Padrões -->
+      <button class="theme-toggle-btn" (click)="resetToDefaults()" title="Resetar para os padrões" aria-label="Resetar todas as configurações para o padrão">
+        <i class="fa-solid fa-arrow-rotate-left" aria-hidden="true"></i>
+      </button>
+
+      <a href="https://github.com/brunonyland/qr-gen" target="_blank" rel="noopener noreferrer" class="header-link-git" aria-label="Ir para a documentação do qr-gen no GitHub (abre em nova aba)">
+        <i class="fa-brands fa-github" aria-hidden="true"></i>
+        <span>Documentação</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Conteúdo Principal -->
+  <main class="main-content">
+
+    <!-- Painel de Controle (Esquerdo) -->
+    <section class="control-panel" aria-label="Painel de configurações">
+
+      <!-- Seleção de Tipo (Tabs) -->
+      <div class="tabs-container" role="tablist" aria-label="Tipos de dados para o QR Code">
+        <button class="tab-btn" [class.active]="selectedTab() === 'url'" (click)="setTab('url')" role="tab" [attr.aria-selected]="selectedTab() === 'url' ? 'true' : 'false'">
+          <i class="fa-solid fa-link" aria-hidden="true"></i>
+          <span>Link (URL)</span>
+        </button>
+        <button class="tab-btn" [class.active]="selectedTab() === 'text'" (click)="setTab('text')" role="tab" [attr.aria-selected]="selectedTab() === 'text' ? 'true' : 'false'">
+          <i class="fa-solid fa-align-left" aria-hidden="true"></i>
+          <span>Texto</span>
+        </button>
+        <button class="tab-btn" [class.active]="selectedTab() === 'wifi'" (click)="setTab('wifi')" role="tab" [attr.aria-selected]="selectedTab() === 'wifi' ? 'true' : 'false'">
+          <i class="fa-solid fa-wifi" aria-hidden="true"></i>
+          <span>WiFi</span>
+        </button>
+        <button class="tab-btn" [class.active]="selectedTab() === 'pix'" (click)="setTab('pix')" role="tab" [attr.aria-selected]="selectedTab() === 'pix' ? 'true' : 'false'">
+          <i class="fa-solid fa-money-bill-transfer" aria-hidden="true"></i>
+          <span>PIX</span>
+        </button>
+        <button class="tab-btn" [class.active]="selectedTab() === 'contact'" (click)="setTab('contact')" role="tab" [attr.aria-selected]="selectedTab() === 'contact' ? 'true' : 'false'">
+          <i class="fa-solid fa-address-card" aria-hidden="true"></i>
+          <span>Contato</span>
+        </button>
+        <button class="tab-btn" [class.active]="selectedTab() === 'whatsapp'" (click)="setTab('whatsapp')" role="tab" [attr.aria-selected]="selectedTab() === 'whatsapp' ? 'true' : 'false'">
+          <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+          <span>WhatsApp</span>
+        </button>
+        <button class="tab-btn" [class.active]="selectedTab() === 'email'" (click)="setTab('email')" role="tab" [attr.aria-selected]="selectedTab() === 'email' ? 'true' : 'false'">
+          <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+          <span>E-mail</span>
+        </button>
+        <button class="tab-btn" [class.active]="selectedTab() === 'phone'" (click)="setTab('phone')" role="tab" [attr.aria-selected]="selectedTab() === 'phone' ? 'true' : 'false'">
+          <i class="fa-solid fa-phone" aria-hidden="true"></i>
+          <span>Telefone</span>
+        </button>
+      </div>
+
+      <!-- Accordion de Configurações -->
+      <div class="accordion-container">
+
+        <!-- Accordion 1: Conteúdo Dinâmico -->
+        <div class="accordion-item" [class.active]="activeAccordion() === 'content'">
+          <button class="accordion-header" id="accordion-header-content" (click)="toggleAccordion('content')" [attr.aria-expanded]="activeAccordion() === 'content' ? 'true' : 'false'" aria-controls="accordion-panel-content">
+            <span class="header-title">
+              <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+              <span>Conteúdo do QR Code</span>
+            </span>
+            <i class="fa-solid fa-chevron-down chevron-icon" aria-hidden="true"></i>
+          </button>
+
+          <div class="accordion-content" id="accordion-panel-content" role="region" aria-labelledby="accordion-header-content" *ngIf="activeAccordion() === 'content'">
+            <!-- Link (URL) -->
+            <div class="form-group" *ngIf="selectedTab() === 'url'">
+              <label class="form-label" for="urlInput">URL da Página</label>
+              <input type="text" id="urlInput" [(ngModel)]="urlData.url" (ngModelChange)="generateQR()"
+                placeholder="https://exemplo.com">
+            </div>
+
+            <!-- Texto -->
+            <div class="form-group" *ngIf="selectedTab() === 'text'">
+              <label class="form-label" for="textInput">Texto Livre</label>
+              <textarea id="textInput" [(ngModel)]="textData.text" (ngModelChange)="generateQR()" rows="4"
+                placeholder="Digite seu texto aqui..."></textarea>
+            </div>
+
+            <!-- WiFi -->
+            <div *ngIf="selectedTab() === 'wifi'" class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="wifiSsid">SSID (Nome da Rede)</label>
+                <input type="text" id="wifiSsid" [(ngModel)]="wifiData.ssid" (ngModelChange)="generateQR()"
+                  placeholder="Minha Rede WiFi">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="wifiPassword">Senha</label>
+                <input type="password" id="wifiPassword" [(ngModel)]="wifiData.password" (ngModelChange)="generateQR()"
+                  placeholder="Senha da rede">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="wifiEncryption">Segurança</label>
+                <select id="wifiEncryption" [(ngModel)]="wifiData.encryption" (ngModelChange)="generateQR()">
+                  <option value="WPA">WPA/WPA2</option>
+                  <option value="WEP">WEP</option>
+                  <option value="nopass">Sem senha (Aberta)</option>
+                </select>
+              </div>
+              <div class="form-group flex-center" style="flex-direction: row; gap: 10px; margin-top: 25px;">
+                <input type="checkbox" id="hiddenWifi" [(ngModel)]="wifiData.hidden" (ngModelChange)="generateQR()">
+                <label for="hiddenWifi" class="form-label" style="cursor: pointer; margin-bottom: 0;">Rede Oculta</label>
+              </div>
+            </div>
+
+            <!-- PIX -->
+            <div *ngIf="selectedTab() === 'pix'" class="form-grid-2">
+              <div class="form-group" style="grid-column: span 2;">
+                <label class="form-label" for="pixKey">Chave PIX (E-mail, CPF, CNPJ, Celular ou Chave Aleatória)</label>
+                <input type="text" id="pixKey" [(ngModel)]="pixData.key" (ngModelChange)="generateQR()"
+                  placeholder="exemplo@email.com ou 123.456.789-00">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="pixName">Nome do Recebedor</label>
+                <input type="text" id="pixName" [(ngModel)]="pixData.name" (ngModelChange)="generateQR()"
+                  placeholder="Nome Completo">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="pixCity">Cidade do Recebedor</label>
+                <input type="text" id="pixCity" [(ngModel)]="pixData.city" (ngModelChange)="generateQR()"
+                  placeholder="Ex: SAO PAULO">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="pixAmount">Valor (Opcional)</label>
+                <input type="number" id="pixAmount" [(ngModel)]="pixData.amount" (ngModelChange)="generateQR()" placeholder="0.00"
+                  step="0.01" min="0">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="pixTxid">Código da Transação (TXID)</label>
+                <input type="text" id="pixTxid" [(ngModel)]="pixData.txid" (ngModelChange)="generateQR()"
+                  placeholder="Ex: PEDIDO01 ou ***">
+              </div>
+            </div>
+
+            <!-- Contato -->
+            <div *ngIf="selectedTab() === 'contact'" class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="contactName">Nome</label>
+                <input type="text" id="contactName" [(ngModel)]="contactData.name" (ngModelChange)="generateQR()"
+                  placeholder="Nome Completo">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="contactPhone">Telefone</label>
+                <input type="text" id="contactPhone" [(ngModel)]="contactData.phone" (ngModelChange)="generateQR()"
+                  placeholder="+55 11 99999-9999">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="contactEmail">E-mail</label>
+                <input type="email" id="contactEmail" [(ngModel)]="contactData.email" (ngModelChange)="generateQR()"
+                  placeholder="contato@exemplo.com">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="contactOrg">Organização / Empresa</label>
+                <input type="text" id="contactOrg" [(ngModel)]="contactData.org" (ngModelChange)="generateQR()"
+                  placeholder="Minha Empresa">
+              </div>
+              <div class="form-group" style="grid-column: span 2;">
+                <label class="form-label" for="contactUrl">Website</label>
+                <input type="text" id="contactUrl" [(ngModel)]="contactData.url" (ngModelChange)="generateQR()"
+                  placeholder="https://meusite.com">
+              </div>
+            </div>
+
+            <!-- WhatsApp -->
+            <div *ngIf="selectedTab() === 'whatsapp'" class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="whatsappPhone">Número de Telefone (DDI+DDD+Nº)</label>
+                <input type="text" id="whatsappPhone" [(ngModel)]="whatsappData.phone" (ngModelChange)="generateQR()"
+                  placeholder="5511999999999">
+              </div>
+              <div class="form-group" style="grid-column: span 2;">
+                <label class="form-label" for="whatsappMessage">Mensagem Padrão (Opcional)</label>
+                <textarea id="whatsappMessage" [(ngModel)]="whatsappData.message" (ngModelChange)="generateQR()" rows="3"
+                  placeholder="Mensagem pré-preenchida..."></textarea>
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div *ngIf="selectedTab() === 'email'" class="form-grid-2">
+              <div class="form-group" style="grid-column: span 2;">
+                <label class="form-label" for="emailRecipient">Destinatário (E-mail)</label>
+                <input type="email" id="emailRecipient" [(ngModel)]="emailData.recipient" (ngModelChange)="generateQR()"
+                  placeholder="destinatario@exemplo.com">
+              </div>
+              <div class="form-group" style="grid-column: span 2;">
+                <label class="form-label" for="emailSubject">Assunto</label>
+                <input type="text" id="emailSubject" [(ngModel)]="emailData.subject" (ngModelChange)="generateQR()"
+                  placeholder="Assunto do email">
+              </div>
+              <div class="form-group" style="grid-column: span 2;">
+                <label class="form-label" for="emailBody">Corpo do E-mail</label>
+                <textarea id="emailBody" [(ngModel)]="emailData.body" (ngModelChange)="generateQR()" rows="3"
+                  placeholder="Mensagem do email..."></textarea>
+              </div>
+            </div>
+
+            <!-- Telefone -->
+            <div class="form-group" *ngIf="selectedTab() === 'phone'">
+              <label class="form-label" for="phoneInput">Número de Telefone</label>
+              <input type="text" id="phoneInput" [(ngModel)]="phoneData.phone" (ngModelChange)="generateQR()"
+                placeholder="+5511999999999">
+            </div>
+          </div>
+        </div>
+
+        <!-- Accordion 2: Tamanhos e Parâmetros -->
+        <div class="accordion-item" [class.active]="activeAccordion() === 'parameters'">
+          <button class="accordion-header" id="accordion-header-parameters" (click)="toggleAccordion('parameters')" [attr.aria-expanded]="activeAccordion() === 'parameters' ? 'true' : 'false'" aria-controls="accordion-panel-parameters">
+            <span class="header-title">
+              <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+              <span>Parâmetros Visuais</span>
+            </span>
+            <i class="fa-solid fa-chevron-down chevron-icon" aria-hidden="true"></i>
+          </button>
+
+          <div class="accordion-content" id="accordion-panel-parameters" role="region" aria-labelledby="accordion-header-parameters" *ngIf="activeAccordion() === 'parameters'">
+            <div class="form-grid-2">
+              <!-- Tamanho -->
+              <div class="range-container">
+                <div class="range-header">
+                  <label class="form-label" for="qrSize">Tamanho do QR Code</label>
+                  <span class="range-value" aria-live="polite">{{ size() }}px</span>
+                </div>
+                <input type="range" id="qrSize" [min]="200" [max]="800" [step]="50" [ngModel]="size()"
+                  (ngModelChange)="size.set($event); generateQR()">
+              </div>
+
+              <!-- Cantos Arredondados -->
+              <div class="range-container">
+                <div class="range-header">
+                  <label class="form-label" for="qrRounded">Arredondamento dos Módulos</label>
+                  <span class="range-value" aria-live="polite">{{ rounded() }}%</span>
+                </div>
+                <input type="range" id="qrRounded" [min]="0" [max]="100" [step]="10" [ngModel]="rounded()"
+                  (ngModelChange)="rounded.set($event); generateQR()">
+              </div>
+
+              <!-- Margem / Quiet zone -->
+              <div class="range-container">
+                <div class="range-header">
+                  <label class="form-label" for="qrQuiet">Margem (Quiet Zone)</label>
+                  <span class="range-value" aria-live="polite">{{ quiet() }}</span>
+                </div>
+                <input type="range" id="qrQuiet" [min]="0" [max]="4" [step]="1" [ngModel]="quiet()"
+                  (ngModelChange)="quiet.set($event); generateQR()">
+              </div>
+
+              <!-- Correção de Erros -->
+              <div class="form-group">
+                <label class="form-label" for="qrEcLevel">Nível de Correção de Erro</label>
+                <select id="qrEcLevel" [ngModel]="ecLevel()" (ngModelChange)="ecLevel.set($event); generateQR()">
+                  <option value="L">L (7% de recuperação)</option>
+                  <option value="M">M (15% de recuperação)</option>
+                  <option value="Q">Q (25% de recuperação)</option>
+                  <option value="H">H (30% de recuperação - Recomendado para logotipos)</option>
+                </select>
+              </div>
+
+              <!-- Nitidez Máxima -->
+              <div class="form-group flex-center" style="flex-direction: row; gap: 10px; margin-top: 15px;">
+                <input type="checkbox" id="crispQr" [ngModel]="crisp()"
+                  (ngModelChange)="crisp.set($event); generateQR()">
+                <label for="crispQr" class="form-label" style="cursor: pointer; margin-bottom: 0;">Super Nitidez (Crisp)</label>
+              </div>
+
+              <!-- Formato do Render -->
+              <div class="form-group">
+                <label class="form-label" for="qrRenderMode">Renderizador Principal</label>
+                <select id="qrRenderMode" [ngModel]="renderMode()" (ngModelChange)="renderMode.set($event); generateQR()">
+                  <option value="image">Elemento Imagem (IMG)</option>
+                  <option value="canvas">Canvas HTML5</option>
+                  <option value="svg">Gráfico Vetorial (SVG)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accordion 3: Cores e Gradientes -->
+        <div class="accordion-item" [class.active]="activeAccordion() === 'colors'">
+          <button class="accordion-header" id="accordion-header-colors" (click)="toggleAccordion('colors')" [attr.aria-expanded]="activeAccordion() === 'colors' ? 'true' : 'false'" aria-controls="accordion-panel-colors">
+            <span class="header-title">
+              <i class="fa-solid fa-palette" aria-hidden="true"></i>
+              <span>Cores e Gradientes</span>
+            </span>
+            <i class="fa-solid fa-chevron-down chevron-icon" aria-hidden="true"></i>
+          </button>
+
+          <div class="accordion-content" id="accordion-panel-colors" role="region" aria-labelledby="accordion-header-colors" *ngIf="activeAccordion() === 'colors'">
+            <div class="form-grid-2">
+              <!-- Tipo de Preenchimento -->
+              <div class="form-group" style="grid-column: span 2;">
+                <label class="form-label" for="qrFillMode">Tipo de Preenchimento (Cor do QR)</label>
+                <select id="qrFillMode" [ngModel]="fillMode()" (ngModelChange)="fillMode.set($event); generateQR()">
+                  <option value="solid">Cor Sólida</option>
+                  <option value="gradient">Gradiente Moderno</option>
+                </select>
+              </div>
+
+              <!-- Cor Sólida -->
+              <div class="form-group" *ngIf="fillMode() === 'solid'">
+                <label class="form-label" for="qrSolidColor">Cor do QR Code</label>
+                <div class="color-picker-group">
+                  <input type="color" id="qrSolidColor" [ngModel]="solidColor()" (ngModelChange)="solidColor.set($event); generateQR()">
+                  <span style="font-size: 0.9rem;" aria-live="polite">{{ solidColor() }}</span>
+                </div>
+              </div>
+
+              <!-- Configurações do Gradiente -->
+              <div class="color-option-container" *ngIf="fillMode() === 'gradient'" style="grid-column: span 2;">
+                <div class="form-grid-2">
+                  <div class="form-group">
+                    <label class="form-label" for="qrGradientType">Tipo de Gradiente</label>
+                    <select id="qrGradientType" [ngModel]="gradientType()" (ngModelChange)="gradientType.set($event); generateQR()">
+                      <option value="linear">Linear</option>
+                      <option value="radial">Radial</option>
+                    </select>
+                  </div>
+                  <div class="form-group" *ngIf="gradientType() === 'linear'">
+                    <label class="form-label" for="qrGradientAngle">Ângulo (Graus)</label>
+                    <input type="number" id="qrGradientAngle" [ngModel]="gradientAngle()"
+                      (ngModelChange)="gradientAngle.set($event); generateQR()" min="0" max="360">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="qrGradientColor1">Cor Inicial</label>
+                    <div class="color-picker-group">
+                      <input type="color" id="qrGradientColor1" [ngModel]="gradientColor1()"
+                        (ngModelChange)="gradientColor1.set($event); generateQR()">
+                      <span aria-live="polite">{{ gradientColor1() }}</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="qrGradientColor2">Cor Final</label>
+                    <div class="color-picker-group">
+                      <input type="color" id="qrGradientColor2" [ngModel]="gradientColor2()"
+                        (ngModelChange)="gradientColor2.set($event); generateQR()">
+                      <span aria-live="polite">{{ gradientColor2() }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Cor de Fundo -->
+              <div class="form-group">
+                <label class="form-label" for="qrBgColor">Cor de Fundo</label>
+                <div class="color-picker-group" [style.opacity]="transparentBg() ? 0.5 : 1">
+                  <input type="color" id="qrBgColor" [disabled]="transparentBg()" [ngModel]="bgColor()"
+                    (ngModelChange)="bgColor.set($event); generateQR()">
+                  <span style="font-size: 0.9rem;" aria-live="polite">{{ transparentBg() ? 'N/A' : bgColor() }}</span>
+                </div>
+              </div>
+
+              <!-- Fundo Transparente -->
+              <div class="form-group flex-center" style="flex-direction: row; gap: 10px; margin-top: 15px;">
+                <input type="checkbox" id="transBg" [ngModel]="transparentBg()"
+                  (ngModelChange)="transparentBg.set($event); generateQR()">
+                <label for="transBg" class="form-label" style="cursor: pointer; margin-bottom: 0;">Fundo Transparente</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accordion 4: Marcadores de Canto (Finders) -->
+        <div class="accordion-item" [class.active]="activeAccordion() === 'finders'">
+          <button class="accordion-header" id="accordion-header-finders" (click)="toggleAccordion('finders')" [attr.aria-expanded]="activeAccordion() === 'finders' ? 'true' : 'false'" aria-controls="accordion-panel-finders">
+            <span class="header-title">
+              <i class="fa-solid fa-shapes" aria-hidden="true"></i>
+              <span>Marcadores de Canto (Finders)</span>
+            </span>
+            <i class="fa-solid fa-chevron-down chevron-icon" aria-hidden="true"></i>
+          </button>
+
+          <div class="accordion-content" id="accordion-panel-finders" role="region" aria-labelledby="accordion-header-finders" *ngIf="activeAccordion() === 'finders'">
+            <div class="form-grid-2">
+              <!-- Forma do Finder Externo -->
+              <div class="form-group">
+                <label class="form-label" for="qrFinderShape">Forma Externa (Moldura)</label>
+                <select id="qrFinderShape" [ngModel]="finderShape()" (ngModelChange)="finderShape.set($event); generateQR()">
+                  <option [value]="null">Igual aos módulos</option>
+                  <option value="square">Quadrado</option>
+                  <option value="circle">Círculo</option>
+                  <option value="rounded">Arredondado</option>
+                </select>
+              </div>
+
+              <!-- Forma do Olho do Finder (Interno) -->
+              <div class="form-group">
+                <label class="form-label" for="qrFinderEyeShape">Forma Interna (Centro)</label>
+                <select id="qrFinderEyeShape" [ngModel]="finderEyeShape()" (ngModelChange)="finderEyeShape.set($event); generateQR()">
+                  <option [value]="null">Igual aos módulos</option>
+                  <option value="square">Quadrado</option>
+                  <option value="circle">Círculo</option>
+                  <option value="rounded">Arredondado</option>
+                  <option value="triangle">Triângulo</option>
+                  <option value="diamond">Diamante</option>
+                  <option value="star">Estrela</option>
+                  <option value="heart">Coração</option>
+                </select>
+              </div>
+
+              <!-- Customizar Cor dos Finders -->
+              <div class="form-group flex-center"
+                style="grid-column: span 2; flex-direction: row; gap: 10px; margin-top: 10px; justify-content: flex-start;">
+                <input type="checkbox" id="customFinderCol" [ngModel]="customFinderColor()"
+                  (ngModelChange)="customFinderColor.set($event); generateQR()">
+                <label for="customFinderCol" class="form-label" style="cursor: pointer; margin-bottom: 0;">Cor customizada para Marcadores</label>
+              </div>
+
+              <!-- Configurações de Cor dos Finders -->
+              <div class="color-option-container" *ngIf="customFinderColor()" style="grid-column: span 2;">
+                <div class="form-grid-2">
+                  <div class="form-group" style="grid-column: span 2;">
+                    <label class="form-label" for="qrFinderColorMode">Tipo de Preenchimento do Marcador</label>
+                    <select id="qrFinderColorMode" [ngModel]="finderColorMode()" (ngModelChange)="finderColorMode.set($event); generateQR()">
+                      <option value="solid">Cor Sólida</option>
+                      <option value="gradient">Gradiente</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group" *ngIf="finderColorMode() === 'solid'">
+                    <label class="form-label" for="qrFinderSolidColor">Cor do Marcador</label>
+                    <div class="color-picker-group">
+                      <input type="color" id="qrFinderSolidColor" [ngModel]="finderSolidColor()"
+                        (ngModelChange)="finderSolidColor.set($event); generateQR()">
+                      <span aria-live="polite">{{ finderSolidColor() }}</span>
+                    </div>
+                  </div>
+
+                  <div *ngIf="finderColorMode() === 'gradient'" class="form-grid-2"
+                    style="grid-column: span 2; padding: 0;">
+                    <div class="form-group">
+                      <label class="form-label" for="qrFinderGradientType">Tipo do Gradiente</label>
+                      <select id="qrFinderGradientType" [ngModel]="finderGradientType()"
+                        (ngModelChange)="finderGradientType.set($event); generateQR()">
+                        <option value="linear">Linear</option>
+                        <option value="radial">Radial</option>
+                      </select>
+                    </div>
+                    <div class="form-group" *ngIf="finderGradientType() === 'linear'">
+                      <label class="form-label" for="qrFinderGradientAngle">Ângulo (Graus)</label>
+                      <input type="number" id="qrFinderGradientAngle" [ngModel]="finderGradientAngle()"
+                        (ngModelChange)="finderGradientAngle.set($event); generateQR()" min="0" max="360">
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="qrFinderGradientColor1">Cor Inicial</label>
+                      <div class="color-picker-group">
+                        <input type="color" id="qrFinderGradientColor1" [ngModel]="finderGradientColor1()"
+                          (ngModelChange)="finderGradientColor1.set($event); generateQR()">
+                        <span aria-live="polite">{{ finderGradientColor1() }}</span>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="qrFinderGradientColor2">Cor Final</label>
+                      <div class="color-picker-group">
+                        <input type="color" id="qrFinderGradientColor2" [ngModel]="finderGradientColor2()"
+                          (ngModelChange)="finderGradientColor2.set($event); generateQR()">
+                        <span aria-live="polite">{{ finderGradientColor2() }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accordion 5: Ícone & Logotipo Central -->
+        <div class="accordion-item" [class.active]="activeAccordion() === 'badge'">
+          <button class="accordion-header" id="accordion-header-badge" (click)="toggleAccordion('badge')" [attr.aria-expanded]="activeAccordion() === 'badge' ? 'true' : 'false'" aria-controls="accordion-panel-badge">
+            <span class="header-title">
+              <i class="fa-solid fa-image" aria-hidden="true"></i>
+              <span>Logotipo ou Texto Central</span>
+            </span>
+            <i class="fa-solid fa-chevron-down chevron-icon" aria-hidden="true"></i>
+          </button>
+
+          <div class="accordion-content" id="accordion-panel-badge" role="region" aria-labelledby="accordion-header-badge" *ngIf="activeAccordion() === 'badge'">
+            <div class="form-grid-2">
+              <!-- Modo do Badge -->
+              <div class="form-group" style="grid-column: span 2;">
+                <label class="form-label" for="qrBadgeMode">Tipo de Sobreposição Central</label>
+                <select id="qrBadgeMode" [ngModel]="badgeMode()" (ngModelChange)="badgeMode.set($event); generateQR()">
+                  <option value="plain">Nenhum (Padrão)</option>
+                  <option value="label">Texto Personalizado</option>
+                  <option value="image">Logotipo / Imagem</option>
+                </select>
+              </div>
+
+              <!-- Tamanho do Badge (Comum a Label e Image) -->
+              <div class="range-container" *ngIf="badgeMode() !== 'plain'" style="grid-column: span 2;">
+                <div class="range-header">
+                  <label class="form-label" for="qrBadgeSize">Tamanho da Sobreposição</label>
+                  <span class="range-value" aria-live="polite">{{ badgeSize() }}%</span>
+                </div>
+                <input type="range" id="qrBadgeSize" [min]="5" [max]="35" [step]="1" [ngModel]="badgeSize()"
+                  (ngModelChange)="badgeSize.set($event); generateQR()">
+              </div>
+
+              <!-- Configuração de Texto (Label) -->
+              <div *ngIf="badgeMode() === 'label'" class="form-grid-2" style="grid-column: span 2; padding: 0;">
+                <div class="form-group">
+                  <label class="form-label" for="qrLabelText">Texto Central</label>
+                  <input type="text" id="qrLabelText" [(ngModel)]="labelText" (ngModelChange)="generateQR()" placeholder="Ex: QR">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="qrLabelFont">Fonte</label>
+                  <select id="qrLabelFont" [(ngModel)]="labelFont" (ngModelChange)="generateQR()">
+                    <option value="Outfit">Outfit</option>
+                    <option value="Inter">Inter</option>
+                    <option value="Montserrat">Montserrat</option>
+                    <option value="Poppins">Poppins</option>
+                    <option value="Playfair Display">Playfair Display</option>
+                    <option value="Space Grotesk">Space Grotesk</option>
+                    <option value="Cinzel">Cinzel</option>
+                    <option value="Orbitron">Orbitron</option>
+                    <option value="Pacifico">Pacifico</option>
+                    <option value="Dancing Script">Dancing Script</option>
+                    <option value="Arial">Arial</option>
+                    <option value="Helvetica">Helvetica</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Impact">Impact</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="qrLabelFontColor">Cor do Texto</label>
+                  <div class="color-picker-group">
+                    <input type="color" id="qrLabelFontColor" [(ngModel)]="labelFontColor" (ngModelChange)="generateQR()">
+                    <span aria-live="polite">{{ labelFontColor }}</span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="qrLabelStrokeColor">Cor do Contorno</label>
+                  <div class="color-picker-group">
+                    <input type="color" id="qrLabelStrokeColor" [(ngModel)]="labelStrokeColor" (ngModelChange)="generateQR()">
+                    <span aria-live="polite">{{ labelStrokeColor }}</span>
+                  </div>
+                </div>
+                <div class="range-container" style="grid-column: span 2;">
+                  <div class="range-header">
+                    <label class="form-label" for="qrLabelStrokeWidth">Espessura do Contorno</label>
+                    <span class="range-value" aria-live="polite">{{ labelStrokeWidth() }}</span>
+                  </div>
+                  <input type="range" id="qrLabelStrokeWidth" [min]="0" [max]="1" [step]="0.05" [ngModel]="labelStrokeWidth()"
+                    (ngModelChange)="labelStrokeWidth.set($event); generateQR()">
+                </div>
+              </div>
+
+              <!-- Configuração de Imagem (Upload) -->
+              <div *ngIf="badgeMode() === 'image'" style="grid-column: span 2;" class="form-group">
+                <span class="form-label" id="logoUploadLabel">Upload do Logotipo</span>
+
+                <!-- Área de Drop/Upload -->
+                <div class="file-upload-area" (click)="fileInput.click()" (keydown)="onFileUploadKeyDown($event, fileInput)" tabindex="0" role="button" aria-labelledby="logoUploadLabel" *ngIf="!uploadedImageSrc()">
+                  <i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i>
+                  <p style="font-size: 0.9rem; font-weight: 500;">Clique ou pressione Espaço para carregar uma imagem</p>
+                  <p style="font-size: 0.75rem; color: var(--text-muted);">PNG, JPG ou SVG (Recomendado fundo transparente)</p>
+                </div>
+
+                <!-- Exibição do Arquivo Carregado -->
+                <div class="file-name-display" *ngIf="uploadedImageSrc()">
+                  <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fa-regular fa-image" style="color: var(--accent-cyan); font-size: 1.1rem;" aria-hidden="true"></i>
+                    <span style="font-weight: 500;">Logotipo Carregado</span>
+                  </div>
+                  <button class="remove-file-btn" (click)="removeUploadedImage()" aria-label="Remover logotipo carregado">
+                    <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+                  </button>
+                </div>
+
+                <!-- Input Oculto -->
+                <input #fileInput type="file" style="display: none;" accept="image/*" (change)="onImageUpload($event)" aria-hidden="true" tabindex="-1">
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Painel de Visualização (Direito) -->
+    <section class="preview-panel" aria-label="Visualização e download do QR Code">
+      <div class="sticky-preview">
+
+        <!-- Card de Visualização -->
+        <div class="glass-panel preview-card">
+          <div class="qr-wrapper" [class.transparent-bg]="transparentBg()" #qrOutputContainer role="img" aria-label="QR Code Gerado">
+            <!-- Elemento de QR gerado será anexado aqui pelo Angular -->
+          </div>
+
+          <!-- Botões de Ação -->
+          <div class="action-buttons">
+            <button class="btn-primary" (click)="downloadPNG()" #downloadBtn aria-label="Baixar QR Code gerado no formato de imagem PNG">
+              <i class="fa-solid fa-download" aria-hidden="true"></i>
+              <span>Baixar Imagem PNG</span>
+            </button>
+            <button class="btn-secondary" (click)="downloadSVG()" aria-label="Baixar QR Code gerado no formato vetorial SVG">
+              <i class="fa-solid fa-file-code" aria-hidden="true"></i>
+              <span>Baixar Vetorial SVG</span>
+            </button>
+            <button class="btn-secondary" (click)="copyToClipboard()" aria-label="Copiar conteúdo de dados do QR Code para a área de transferência">
+              <i class="fa-solid fa-copy" aria-hidden="true"></i>
+              <span>Copiar para Área de Transferência</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="main-footer">
+    <p class="footer-text">
+      Desenvolvido usando a biblioteca
+      <a href="https://github.com/brunonyland/qr-gen" target="_blank" rel="noopener noreferrer" aria-label="Ir para a página da biblioteca qr-gen no GitHub (abre em nova aba)">@brunonyland/qr-gen</a>
+      e Angular © 2026
+    </p>
+  </footer>
+</div>
+
+<!-- Container de Toasts -->
+<div class="toast-container" role="log" aria-live="polite">
+  <div class="toast" *ngFor="let toast of toasts()" [class.toast-error]="toast.type === 'error'"
+    [class.leaving]="toast.isLeaving" role="alert">
+    <i class="fa-solid" [class.fa-circle-check]="toast.type === 'success'"
+      [class.fa-circle-exclamation]="toast.type === 'error'" aria-hidden="true"></i>
+    <span>{{ toast.message }}</span>
+  </div>
+</div>
+
+<!-- Elemento IMG oculto para armazenar a imagem em buffer usada como logotipo central pelo qr-gen -->
+<img #hiddenImageBuffer style="display: none;" [src]="uploadedImageSrc() || ''" alt="" aria-hidden="true">
