@@ -578,6 +578,55 @@
   text-shadow: var(--glow-cyan);
 }
 
+/* Crédito do desenvolvedor (igual ao sintraffms.com). O roxo é a cor da
+   marca do brunonyland.com e aparece só no hover/foco; no tema claro usa um
+   roxo mais escuro (styles.css), porque o #9b85ff sobre branco não tem
+   contraste para texto. */
+.credito {
+  --credito-cor: #9b85ff;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  margin-top: 8px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.credito img {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface-solid);
+  transition: border-color 0.15s;
+}
+
+.credito-nome {
+  font-weight: 700;
+  color: var(--text-secondary);
+  transition: color 0.15s;
+}
+
+.credito:hover .credito-nome,
+.credito:focus-visible .credito-nome {
+  color: var(--credito-cor);
+}
+
+.credito:hover img,
+.credito:focus-visible img {
+  border-color: var(--credito-cor);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .credito img,
+  .credito-nome {
+    transition: none;
+  }
+}
+
 /* Responsividade */
 @media (max-width: 1024px) {
   .main-content {

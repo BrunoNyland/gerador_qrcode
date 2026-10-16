@@ -340,6 +340,10 @@ body.light-theme .main-footer {
   -webkit-backdrop-filter: none;
 }
 
+body.light-theme .credito {
+  --credito-cor: #6d44d9;
+}
+
 body.light-theme .logo-icon,
 body.light-theme .logo-text {
   color: #000000;
