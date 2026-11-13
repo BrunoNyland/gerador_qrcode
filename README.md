@@ -35,3 +35,15 @@ Siga os passos abaixo para rodar o projeto no seu ambiente de desenvolvimento:
    ```
 
 3. Acesse no seu navegador: `http://localhost:4200/`
+
+## 🚢 Publicação
+
+O site é estático, servido pelo nginx da VPS. Para publicar:
+
+```bash
+./deploy.sh            # traz o origin/main, testa, builda, compacta (.br/.gz) e publica
+./deploy.sh --local    # publica a árvore local como está
+```
+
+O build é feito numa pasta temporária e só é copiado se os testes e o build
+passarem. Os arquivos com hash de builds anteriores ficam 7 dias no servidor.
