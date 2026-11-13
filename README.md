@@ -12,7 +12,7 @@ O projeto está no ar e pode ser utilizado diretamente através do link:
 O núcleo da geração de QR Codes desta aplicação é alimentado pela biblioteca **[`@brunonyland/qr-gen`](https://www.npmjs.com/package/@brunonyland/qr-gen)**.
 
 Para mais detalhes sobre como ela funciona, como instalá-la em seus projetos ou para contribuir, acesse o repositório oficial:
-🔗 **[Repositório da biblioteca qr-gen no GitHub](https://github.com/brunonyland/qr-gen)** 
+🔗 **[Repositório da biblioteca qr-gen no GitHub](https://github.com/brunonyland/qr-gen)**
 
 ## 🛠️ Principais Tecnologias Utilizadas
 
@@ -25,11 +25,13 @@ Para mais detalhes sobre como ela funciona, como instalá-la em seus projetos ou
 Siga os passos abaixo para rodar o projeto no seu ambiente de desenvolvimento:
 
 1. Instale as dependências do projeto:
+
    ```bash
    npm install
    ```
 
 2. Inicie o servidor de desenvolvimento:
+
    ```bash
    npm start
    ```
