@@ -2,7 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import * as THREE from 'three';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class Background3DService {
   private renderer!: THREE.WebGLRenderer;
@@ -38,7 +38,7 @@ export class Background3DService {
     this.renderer = new THREE.WebGLRenderer({
       canvas,
       antialias: true,
-      alpha: true
+      alpha: true,
     });
     this.renderer.setSize(width, height);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -61,7 +61,7 @@ export class Background3DService {
 
     // Geometry - Icosahedron for organic deforming blob
     const geometry = new THREE.IcosahedronGeometry(2.2, 5); // Radius 2.2, detail 5
-    
+
     // Save original positions for deforming calculation
     const posAttribute = geometry.attributes['position'] as THREE.BufferAttribute;
     this.originalPositions = posAttribute.array.slice() as Float32Array;
@@ -76,7 +76,7 @@ export class Background3DService {
       ior: 1.5,
       transparent: true,
       opacity: 0.45,
-      flatShading: true
+      flatShading: true,
     });
 
     // Wireframe material for the techno-futuristic look
@@ -84,7 +84,7 @@ export class Background3DService {
       color: 0x00f0ff,
       wireframe: true,
       transparent: true,
-      opacity: 0.18
+      opacity: 0.18,
     });
 
     // Create Meshes
@@ -110,7 +110,7 @@ export class Background3DService {
     }
     window.removeEventListener('resize', this.onWindowResize);
     window.removeEventListener('mousemove', this.onMouseMove);
-    
+
     // Dispose resources
     if (this.blob) {
       this.blob.geometry.dispose();
@@ -177,9 +177,10 @@ export class Background3DService {
       const origZ = this.originalPositions[i + 2];
 
       // Calculate distortion using multiple sine/cosine waves based on coordinates and time
-      const wave = Math.sin(origX * 1.5 + time) * 0.12 +
-                   Math.cos(origY * 1.2 - time * 0.8) * 0.12 +
-                   Math.sin(origZ * 1.8 + time * 1.3) * 0.1;
+      const wave =
+        Math.sin(origX * 1.5 + time) * 0.12 +
+        Math.cos(origY * 1.2 - time * 0.8) * 0.12 +
+        Math.sin(origZ * 1.8 + time * 1.3) * 0.1;
 
       // Project vertex outward along its original vector direction
       array[i] = origX * (1 + wave);
@@ -192,7 +193,7 @@ export class Background3DService {
 
   public updateColors(hexColor: string): void {
     const color = new THREE.Color(hexColor);
-    
+
     if (this.dirLight1) {
       this.dirLight1.color.copy(color);
     }

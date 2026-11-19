@@ -4,28 +4,30 @@
   --bg-surface: rgba(24, 24, 26, 0.85);
   --bg-surface-hover: rgba(36, 36, 39, 0.95);
   --bg-surface-solid: #171719;
-  
+
   --accent-primary: #4f46e5;
   --accent-primary-glow: rgba(79, 70, 229, 0.2);
   --accent-cyan: var(--accent-primary);
-  
+
   --text-primary: #f8fafc;
   --text-secondary: #e2e8f0;
   --text-muted: #94a3b8;
-  
+
   --border-color: rgba(255, 255, 255, 0.15);
-  
-  --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  
+
+  --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
   --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-fast: all 0.2s ease;
-  
+
   --card-blur: blur(20px);
 }
 
 /* Reset e Estrutura Básica */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -89,7 +91,12 @@ body {
 }
 
 /* Tipografia */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-sans);
   font-weight: 600;
   letter-spacing: -0.01em;
@@ -101,11 +108,11 @@ p {
 }
 
 /* Inputs, Textareas e Selects Estilizados */
-input[type="text"],
-input[type="number"],
-input[type="password"],
-input[type="email"],
-input[type="tel"],
+input[type='text'],
+input[type='number'],
+input[type='password'],
+input[type='email'],
+input[type='tel'],
 textarea,
 select {
   width: 100%;
@@ -135,7 +142,7 @@ select option {
 }
 
 /* Range Inputs */
-input[type="range"] {
+input[type='range'] {
   -webkit-appearance: none;
   width: 100%;
   height: 6px;
@@ -145,7 +152,7 @@ input[type="range"] {
   transition: var(--transition-fast);
 }
 
-input[type="range"]::-webkit-slider-thumb {
+input[type='range']::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 16px;
@@ -156,11 +163,11 @@ input[type="range"]::-webkit-slider-thumb {
   transition: var(--transition-fast);
 }
 
-input[type="range"]::-webkit-slider-thumb:hover {
+input[type='range']::-webkit-slider-thumb:hover {
   transform: scale(1.15);
 }
 
-input[type="range"]::-moz-range-thumb {
+input[type='range']::-moz-range-thumb {
   width: 16px;
   height: 16px;
   border: none;
@@ -170,12 +177,12 @@ input[type="range"]::-moz-range-thumb {
   transition: var(--transition-fast);
 }
 
-input[type="range"]::-moz-range-thumb:hover {
+input[type='range']::-moz-range-thumb:hover {
   transform: scale(1.15);
 }
 
 /* Checkbox Moderno */
-input[type="checkbox"] {
+input[type='checkbox'] {
   position: relative;
   width: 18px;
   height: 18px;
@@ -192,21 +199,21 @@ input[type="checkbox"] {
   justify-content: center;
 }
 
-input[type="checkbox"]:checked {
+input[type='checkbox']:checked {
   background: var(--accent-cyan);
   border-color: var(--accent-cyan);
   box-shadow: none;
 }
 
-input[type="checkbox"]:checked::after {
-  content: "✓";
+input[type='checkbox']:checked::after {
+  content: '✓';
   font-size: 11px;
   font-weight: bold;
   color: var(--bg-base);
 }
 
 /* Customização de Cores */
-input[type="color"] {
+input[type='color'] {
   -webkit-appearance: none;
   appearance: none;
   border: none;
@@ -217,16 +224,16 @@ input[type="color"] {
   background: none;
 }
 
-input[type="color"]::-webkit-color-swatch-wrapper {
+input[type='color']::-webkit-color-swatch-wrapper {
   padding: 0;
 }
 
-input[type="color"]::-webkit-color-swatch {
+input[type='color']::-webkit-color-swatch {
   border: 2px solid rgba(255, 255, 255, 0.15);
   border-radius: 0px;
 }
 
-input[type="color"]::-moz-color-swatch {
+input[type='color']::-moz-color-swatch {
   border: 2px solid rgba(255, 255, 255, 0.15);
   border-radius: 8px;
 }
@@ -258,19 +265,19 @@ body.light-theme {
   --bg-surface: rgba(245, 247, 250, 0.8);
   --bg-surface-hover: rgba(245, 247, 250, 0.95);
   --bg-surface-solid: #f5f7fa;
-  
+
   --text-primary: #111111;
   --text-secondary: #333333;
   --text-muted: #666666;
-  
+
   --border-color: rgba(17, 17, 17, 0.25);
 }
 
-body.light-theme input[type="text"],
-body.light-theme input[type="number"],
-body.light-theme input[type="password"],
-body.light-theme input[type="email"],
-body.light-theme input[type="tel"],
+body.light-theme input[type='text'],
+body.light-theme input[type='number'],
+body.light-theme input[type='password'],
+body.light-theme input[type='email'],
+body.light-theme input[type='tel'],
 body.light-theme textarea,
 body.light-theme select {
   background: rgba(17, 17, 17, 0.04);
@@ -373,4 +380,3 @@ body.light-theme .accent-color-picker::-webkit-color-swatch {
 body.light-theme .header-link-git:hover {
   background: rgba(17, 17, 17, 0.05);
 }
-

@@ -1,4 +1,13 @@
-import { Component, ElementRef, OnInit, AfterViewInit, OnDestroy, ViewChild, signal, computed } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  AfterViewInit,
+  OnDestroy,
+  ViewChild,
+  signal,
+  computed,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import qrGen from '@brunonyland/qr-gen';
@@ -18,7 +27,7 @@ interface ToastMessage {
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
 })
 export class App implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('bgCanvas') bgCanvas!: ElementRef<HTMLCanvasElement>;
@@ -37,12 +46,36 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
   // Modelos de Dados dos Formas
   public urlData = { url: 'https://brunonyland.com' };
   public textData = { text: 'Olá do QR-Gen!' };
-  public wifiData = { ssid: 'MinhaRedeWiFi', password: 'SenhaSuperSegura', encryption: 'WPA', hidden: false };
-  public whatsappData = { phone: '5511999999999', message: 'Olá! Vim através do QR Code gerado pelo QR-Gen.' };
-  public emailData = { recipient: 'contato@brunonyland.com', subject: 'Contato Comercial', body: 'Olá Bruno, gostaria de saber mais sobre...' };
+  public wifiData = {
+    ssid: 'MinhaRedeWiFi',
+    password: 'SenhaSuperSegura',
+    encryption: 'WPA',
+    hidden: false,
+  };
+  public whatsappData = {
+    phone: '5511999999999',
+    message: 'Olá! Vim através do QR Code gerado pelo QR-Gen.',
+  };
+  public emailData = {
+    recipient: 'contato@brunonyland.com',
+    subject: 'Contato Comercial',
+    body: 'Olá Bruno, gostaria de saber mais sobre...',
+  };
   public phoneData = { phone: '+5511999999999' };
-  public pixData = { key: 'contato@brunonyland.com', name: 'Bruno Nyland', city: 'SAO PAULO', amount: null as number | null, txid: 'PEDIDO100' };
-  public contactData = { name: 'Bruno Nyland', phone: '+5511999999999', email: 'contato@brunonyland.com', org: 'BrunoNyland Inc', url: 'https://brunonyland.com' };
+  public pixData = {
+    key: 'contato@brunonyland.com',
+    name: 'Bruno Nyland',
+    city: 'SAO PAULO',
+    amount: null as number | null,
+    txid: 'PEDIDO100',
+  };
+  public contactData = {
+    name: 'Bruno Nyland',
+    phone: '+5511999999999',
+    email: 'contato@brunonyland.com',
+    org: 'BrunoNyland Inc',
+    url: 'https://brunonyland.com',
+  };
 
   // Parâmetros do QR Code (Signals)
   public size = signal<number>(400);
@@ -64,7 +97,9 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
 
   // Marcadores de Canto (Signals)
   public finderShape = signal<'square' | 'circle' | 'rounded' | null>(null);
-  public finderEyeShape = signal<'square' | 'circle' | 'rounded' | 'triangle' | 'heart' | 'star' | 'diamond' | null>(null);
+  public finderEyeShape = signal<
+    'square' | 'circle' | 'rounded' | 'triangle' | 'heart' | 'star' | 'diamond' | null
+  >(null);
   public customFinderColor = signal<boolean>(false);
   public finderColorMode = signal<'solid' | 'gradient'>('solid');
   public finderSolidColor = signal<string>('#4f46e5');
@@ -85,7 +120,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private background3D: Background3DService,
-    private storage: StorageService
+    private storage: StorageService,
   ) {}
 
   ngOnInit(): void {
@@ -147,7 +182,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
       reader.onload = (e) => {
         const result = e.target?.result as string;
         this.uploadedImageSrc.set(result);
-        
+
         // Espera a imagem ser carregada no buffer de imagem oculto
         setTimeout(() => {
           this.generateQR();
@@ -175,35 +210,35 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
   // Montar Texto do QR Code baseando-se no Preset Selecionado
   private getQRText(): string {
     const tab = this.selectedTab();
-    
+
     switch (tab) {
       case 'url':
         return this.urlData.url || 'https://brunonyland.com';
-      
+
       case 'text':
         return this.textData.text || '';
-      
+
       case 'wifi':
         // Formato: WIFI:S:ssid;T:WPA;P:password;H:false;;
         const hiddenVal = this.wifiData.hidden ? 'true' : 'false';
         return `WIFI:S:${this.wifiData.ssid};T:${this.wifiData.encryption};P:${this.wifiData.password};H:${hiddenVal};;`;
-      
+
       case 'whatsapp':
         // Formato: https://wa.me/5511999999999?text=Olá
         const msgEncoded = encodeURIComponent(this.whatsappData.message || '');
         const cleanPhone = this.whatsappData.phone.replace(/\D/g, '');
         return `https://wa.me/${cleanPhone}${msgEncoded ? '?text=' + msgEncoded : ''}`;
-      
+
       case 'email':
         // Formato: mailto:test@email.com?subject=Subject&body=Body
         const emailSubject = encodeURIComponent(this.emailData.subject || '');
         const emailBody = encodeURIComponent(this.emailData.body || '');
         return `mailto:${this.emailData.recipient}?subject=${emailSubject}&body=${emailBody}`;
-      
+
       case 'phone':
         // Formato: tel:+5511999999999
         return `tel:${this.phoneData.phone}`;
-      
+
       case 'pix':
         // Geração do Payload PIX oficial
         return this.generatePixPayload(
@@ -211,9 +246,9 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
           this.pixData.name,
           this.pixData.city,
           this.pixData.amount,
-          this.pixData.txid
+          this.pixData.txid,
         );
-      
+
       case 'contact':
         // Formato vCard 3.0
         return [
@@ -224,7 +259,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
           `EMAIL:${this.contactData.email}`,
           `ORG:${this.contactData.org}`,
           `URL:${this.contactData.url}`,
-          'END:VCARD'
+          'END:VCARD',
         ].join('\n');
 
       default:
@@ -233,7 +268,13 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // Gera o Payload Oficial do Pix (EMV QRCPS-MPM) com cálculo CRC16
-  private generatePixPayload(key: string, name: string, city: string, amount: number | null, txid: string): string {
+  private generatePixPayload(
+    key: string,
+    name: string,
+    city: string,
+    amount: number | null,
+    txid: string,
+  ): string {
     const pad = (id: string, value: string): string => {
       const len = value.length.toString().padStart(2, '0');
       return `${id}${len}${value}`;
@@ -283,11 +324,20 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
     const additionalData = pad('62', txidVal);
 
     // Juntar os pedaços (exceto o CRC final)
-    let payload = payloadFormat + merchantAccount + category + currency + amountStr + country + receiver + receiverCity + additionalData;
+    let payload =
+      payloadFormat +
+      merchantAccount +
+      category +
+      currency +
+      amountStr +
+      country +
+      receiver +
+      receiverCity +
+      additionalData;
     payload += '6304'; // CRC16 Header ID 63, len 04
 
     // Cálculo do CRC16 CCITT
-    let crc = 0xFFFF;
+    let crc = 0xffff;
     const polynomial = 0x1021;
     for (let i = 0; i < payload.length; i++) {
       const charCode = payload.charCodeAt(i);
@@ -300,7 +350,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
         }
       }
     }
-    crc &= 0xFFFF;
+    crc &= 0xffff;
     const crcHex = crc.toString(16).toUpperCase().padStart(4, '0');
 
     return payload + crcHex;
@@ -318,7 +368,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
         quiet: this.quiet(),
         ecLevel: this.ecLevel(),
         crisp: this.crisp(),
-        back: this.transparentBg() ? null : this.bgColor()
+        back: this.transparentBg() ? null : this.bgColor(),
       };
 
       // Configurar Preenchimento (Solid ou Gradient)
@@ -328,7 +378,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
         options.fill = {
           type: this.gradientType(),
           colors: [this.gradientColor1(), this.gradientColor2()],
-          angle: this.gradientAngle()
+          angle: this.gradientAngle(),
         };
       }
 
@@ -347,7 +397,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
           options.finderColor = {
             type: this.finderGradientType(),
             colors: [this.finderGradientColor1(), this.finderGradientColor2()],
-            angle: this.finderGradientAngle()
+            angle: this.finderGradientAngle(),
           };
         }
       }
@@ -367,7 +417,11 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
           options.labelStrokeWidth = this.labelStrokeWidth();
         } else if (this.badgeMode() === 'image') {
           // Se houver logotipo carregado no buffer de imagem oculto, repassamos
-          if (this.hiddenImageBuffer && this.hiddenImageBuffer.nativeElement && this.uploadedImageSrc()) {
+          if (
+            this.hiddenImageBuffer &&
+            this.hiddenImageBuffer.nativeElement &&
+            this.uploadedImageSrc()
+          ) {
             options.image = this.hiddenImageBuffer.nativeElement;
           } else {
             // Caso contrário, desativa para evitar problemas
@@ -460,7 +514,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
           quiet: this.quiet(),
           ecLevel: this.ecLevel(),
           crisp: this.crisp(),
-          back: this.transparentBg() ? null : this.bgColor()
+          back: this.transparentBg() ? null : this.bgColor(),
         };
 
         if (this.fillMode() === 'solid') {
@@ -469,7 +523,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
           options.fill = {
             type: this.gradientType(),
             colors: [this.gradientColor1(), this.gradientColor2()],
-            angle: this.gradientAngle()
+            angle: this.gradientAngle(),
           };
         }
 
@@ -483,7 +537,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
             options.finderColor = {
               type: this.finderGradientType(),
               colors: [this.finderGradientColor1(), this.finderGradientColor2()],
-              angle: this.finderGradientAngle()
+              angle: this.finderGradientAngle(),
             };
           }
         }
@@ -526,7 +580,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
       },
       (err) => {
         this.showToast('Falha ao copiar dados: ' + err, 'error');
-      }
+      },
     );
   }
 
@@ -563,17 +617,17 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
   private showToast(message: string, type: 'success' | 'error' | 'info'): void {
     const id = ++this.toastIdCounter;
     const toast: ToastMessage = { id, message, type, isLeaving: false };
-    this.toasts.update(current => [...current, toast]);
+    this.toasts.update((current) => [...current, toast]);
 
     // Inicia a animação de saída após 3.2 segundos
     setTimeout(() => {
-      this.toasts.update(current => 
-        current.map(t => t.id === id ? { ...t, isLeaving: true } : t)
+      this.toasts.update((current) =>
+        current.map((t) => (t.id === id ? { ...t, isLeaving: true } : t)),
       );
 
       // Remove definitivamente do DOM após 400ms (tempo da animação CSS)
       setTimeout(() => {
-        this.toasts.update(current => current.filter(t => t.id !== id));
+        this.toasts.update((current) => current.filter((t) => t.id !== id));
       }, 400);
     }, 3200);
   }
@@ -585,16 +639,16 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
       y: -50,
       opacity: 0,
       duration: 1.2,
-      ease: 'power4.out'
+      ease: 'power4.out',
     });
 
-        // Reveal Left tabs and options
+    // Reveal Left tabs and options
     gsap.from('.tabs-container', {
       x: -30,
       opacity: 0,
       duration: 1,
       delay: 0.2,
-      ease: 'power3.out'
+      ease: 'power3.out',
     });
 
     // Reveal Right Preview
@@ -603,7 +657,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
       opacity: 0,
       duration: 1.2,
       delay: 0.3,
-      ease: 'power3.out'
+      ease: 'power3.out',
     });
   }
 
@@ -621,7 +675,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
         x: x * 0.25,
         y: y * 0.25,
         duration: 0.3,
-        ease: 'power2.out'
+        ease: 'power2.out',
       });
     });
 
@@ -630,7 +684,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
         x: 0,
         y: 0,
         duration: 0.5,
-        ease: 'elastic.out(1, 0.4)'
+        ease: 'elastic.out(1, 0.4)',
       });
     });
   }
@@ -639,7 +693,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
   public toggleTheme(): void {
     const nextMode = !this.isDarkMode();
     this.isDarkMode.set(nextMode);
-    
+
     if (nextMode) {
       document.body.classList.remove('light-theme');
     } else {
@@ -655,10 +709,10 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
 
     // Atualiza as propriedades CSS customizadas globalmente
     document.documentElement.style.setProperty('--accent-primary', color);
-    
+
     const glow = this.hexToRgbGlow(color, 0.35);
     document.documentElement.style.setProperty('--accent-primary-glow', glow);
-    
+
     // Atualiza as cores do canvas 3D
     this.background3D.updateColors(color);
 
@@ -678,11 +732,11 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
         quiet: 1,
         fill: this.accentColor(),
         back: '#ffffff', // Fundo branco sólido para legibilidade do ícone
-        render: 'canvas'
+        render: 'canvas',
       }) as HTMLCanvasElement;
-      
+
       const dataUrl = canvasEl.toDataURL('image/png');
-      
+
       // Encontra a tag link rel icon e atualiza seu href
       let link: HTMLLinkElement | null = document.querySelector("link[rel~='icon']");
       if (!link) {
@@ -703,7 +757,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
       activeAccordion: this.activeAccordion(),
       isDarkMode: this.isDarkMode(),
       accentColor: this.accentColor(),
-      
+
       // Dados dos formulários
       urlData: this.urlData,
       textData: this.textData,
@@ -713,7 +767,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
       phoneData: this.phoneData,
       pixData: this.pixData,
       contactData: this.contactData,
-      
+
       // Parâmetros QR Code
       size: this.size(),
       rounded: this.rounded(),
@@ -721,7 +775,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
       ecLevel: this.ecLevel(),
       crisp: this.crisp(),
       renderMode: this.renderMode(),
-      
+
       // Cores QR Code
       fillMode: this.fillMode(),
       solidColor: this.solidColor(),
@@ -731,7 +785,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
       gradientColor1: this.gradientColor1(),
       gradientColor2: this.gradientColor2(),
       gradientAngle: this.gradientAngle(),
-      
+
       // Finders
       finderShape: this.finderShape(),
       finderEyeShape: this.finderEyeShape(),
@@ -742,7 +796,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
       finderGradientColor1: this.finderGradientColor1(),
       finderGradientColor2: this.finderGradientColor2(),
       finderGradientAngle: this.finderGradientAngle(),
-      
+
       // Badge / Contorno
       badgeMode: this.badgeMode(),
       badgeSize: this.badgeSize(),
@@ -750,7 +804,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
       labelFont: this.labelFont,
       labelFontColor: this.labelFontColor,
       labelStrokeColor: this.labelStrokeColor,
-      labelStrokeWidth: this.labelStrokeWidth()
+      labelStrokeWidth: this.labelStrokeWidth(),
     };
     this.storage.saveState(state);
   }
@@ -809,13 +863,18 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
       // Restaura Marcadores
       if (state.finderShape !== undefined) this.finderShape.set(state.finderShape);
       if (state.finderEyeShape !== undefined) this.finderEyeShape.set(state.finderEyeShape);
-      if (state.customFinderColor !== undefined) this.customFinderColor.set(state.customFinderColor);
+      if (state.customFinderColor !== undefined)
+        this.customFinderColor.set(state.customFinderColor);
       if (state.finderColorMode !== undefined) this.finderColorMode.set(state.finderColorMode);
       if (state.finderSolidColor !== undefined) this.finderSolidColor.set(state.finderSolidColor);
-      if (state.finderGradientType !== undefined) this.finderGradientType.set(state.finderGradientType);
-      if (state.finderGradientColor1 !== undefined) this.finderGradientColor1.set(state.finderGradientColor1);
-      if (state.finderGradientColor2 !== undefined) this.finderGradientColor2.set(state.finderGradientColor2);
-      if (state.finderGradientAngle !== undefined) this.finderGradientAngle.set(state.finderGradientAngle);
+      if (state.finderGradientType !== undefined)
+        this.finderGradientType.set(state.finderGradientType);
+      if (state.finderGradientColor1 !== undefined)
+        this.finderGradientColor1.set(state.finderGradientColor1);
+      if (state.finderGradientColor2 !== undefined)
+        this.finderGradientColor2.set(state.finderGradientColor2);
+      if (state.finderGradientAngle !== undefined)
+        this.finderGradientAngle.set(state.finderGradientAngle);
 
       // Restaura Badge
       if (state.badgeMode !== undefined) this.badgeMode.set(state.badgeMode);
@@ -838,11 +897,11 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
     // Reset Estado UI
     this.selectedTab.set('url');
     this.activeAccordion.set('content');
-    
+
     // Reset Tema
     this.isDarkMode.set(true);
     document.body.classList.remove('light-theme');
-    
+
     // Reset Cor de Destaque
     this.accentColor.set('#4f46e5');
     document.documentElement.style.setProperty('--accent-primary', '#4f46e5');
@@ -852,12 +911,36 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
     // Reset Dados Form
     this.urlData = { url: 'https://brunonyland.com' };
     this.textData = { text: 'Olá do QR-Gen!' };
-    this.wifiData = { ssid: 'MinhaRedeWiFi', password: 'SenhaSuperSegura', encryption: 'WPA', hidden: false };
-    this.whatsappData = { phone: '5511999999999', message: 'Olá! Vim através do QR Code gerado pelo QR-Gen.' };
-    this.emailData = { recipient: 'contato@brunonyland.com', subject: 'Contato Comercial', body: 'Olá Bruno, gostaria de saber mais sobre...' };
+    this.wifiData = {
+      ssid: 'MinhaRedeWiFi',
+      password: 'SenhaSuperSegura',
+      encryption: 'WPA',
+      hidden: false,
+    };
+    this.whatsappData = {
+      phone: '5511999999999',
+      message: 'Olá! Vim através do QR Code gerado pelo QR-Gen.',
+    };
+    this.emailData = {
+      recipient: 'contato@brunonyland.com',
+      subject: 'Contato Comercial',
+      body: 'Olá Bruno, gostaria de saber mais sobre...',
+    };
     this.phoneData = { phone: '+5511999999999' };
-    this.pixData = { key: 'contato@brunonyland.com', name: 'Bruno Nyland', city: 'SAO PAULO', amount: null, txid: 'PEDIDO100' };
-    this.contactData = { name: 'Bruno Nyland', phone: '+5511999999999', email: 'contato@brunonyland.com', org: 'BrunoNyland Inc', url: 'https://brunonyland.com' };
+    this.pixData = {
+      key: 'contato@brunonyland.com',
+      name: 'Bruno Nyland',
+      city: 'SAO PAULO',
+      amount: null,
+      txid: 'PEDIDO100',
+    };
+    this.contactData = {
+      name: 'Bruno Nyland',
+      phone: '+5511999999999',
+      email: 'contato@brunonyland.com',
+      org: 'BrunoNyland Inc',
+      url: 'https://brunonyland.com',
+    };
 
     // Reset Parâmetros QR
     this.size.set(400);
@@ -909,7 +992,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
   private hexToRgbGlow(hex: string, alpha: number): string {
     const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
     const fullHex = hex.replace(shorthandRegex, (m, r, g, b) => r + r + g + g + b + b);
-    
+
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(fullHex);
     if (result) {
       const r = parseInt(result[1], 16);

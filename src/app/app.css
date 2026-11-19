@@ -340,13 +340,17 @@
 
 /* Quando o fundo é transparente no QR code, queremos ver um xadrez sutil no wrapper se a cor de fundo for transparente */
 .qr-wrapper.transparent-bg {
-  background-image: 
-    linear-gradient(45deg, #e2e8f0 25%, transparent 25%), 
-    linear-gradient(-45deg, #e2e8f0 25%, transparent 25%), 
-    linear-gradient(45deg, transparent 75%, #e2e8f0 75%), 
+  background-image:
+    linear-gradient(45deg, #e2e8f0 25%, transparent 25%),
+    linear-gradient(-45deg, #e2e8f0 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #e2e8f0 75%),
     linear-gradient(-45deg, transparent 75%, #e2e8f0 75%);
   background-size: 20px 20px;
-  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  background-position:
+    0 0,
+    0 10px,
+    10px -10px,
+    -10px 0px;
 }
 
 .qr-wrapper canvas,
@@ -633,7 +637,7 @@
     grid-template-columns: minmax(0, 1fr);
     gap: 32px;
   }
-  
+
   .preview-panel {
     order: -1; /* Coloca o QR Code no topo para melhor usabilidade visual */
   }
@@ -654,7 +658,7 @@
     width: 100%;
     box-sizing: border-box;
   }
-  
+
   .header-actions {
     width: 100%;
     justify-content: center;
@@ -693,7 +697,7 @@
     padding: 10px 14px;
     min-width: 90px;
   }
-  
+
   .main-content {
     padding: 20px 16px;
     gap: 24px;
@@ -800,6 +804,3 @@ select:focus-visible,
   outline-offset: 3px !important;
   box-shadow: none !important;
 }
-
-
-
